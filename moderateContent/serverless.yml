@@ -1,0 +1,16 @@
+service: s3-lambda
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'sa-east-1'}
+  memorySize: 256
+  timeout: 5
+
+functions:
+  moderateContent:
+    handler: handler.moderateContent
+    
+
+
