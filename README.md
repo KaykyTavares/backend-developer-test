@@ -127,11 +127,16 @@ After reading the project scope, I produced the following draws to amplify my vi
       npm run test
       ```
 
-
-### Bonus Questions
+## Bonus Questions
 
 1. Discuss scalability solutions for the job moderation feature under high load conditions. Consider that over time the system usage grows significantly, to the point where we will have thousands of jobs published every hour. Consider the API will be able to handle the requests, but the serverless component will be overwhelmed with requests to moderate the jobs. This will affect the database connections and calls to the OpenAI API. How would you handle those issues and what solutions would you implement to mitigate the issues?
-- res
+- We can use this differents approaches below to solve this problem:
+    - We can implement a **load balancer** and **auto-scaling** to distribute incoming requests across multiple serverless (AWS Lambda) instances and automatically adjust the number of instances based on workload demand. It prevents overwhelming a lambda instance.
+    - Utilize Amazon SQS **FIFO** (first-in-first-out) queues are designed for high throughput and can handle a large volume of messages, making them suitable for scaling to accommodate thousands of job moderation requests per hour. Also the **FIFO** queues ensure that messages are processed in the exact order they are received.
+    - To solve the question about multiple connection to DB, we can use the **Connection Pooling**. It helps reuse existing connections rather than establishing new ones for each request, reducing the overhead on the database.
+    - To solve the problem about openAi API, we can use the **caching mechanisms**  to store the response of the api and compare them with the other content that is being imputed.
 
 2. Propose a strategy for delivering the job feed globally with sub-millisecond latency. Consider now that we need to provide a low latency endpoint that can serve the job feed content worldwide. Using AWS as a cloud provider, what technologies would you need to use to implement this feature and how would you do it?
-- res
+- First of all we can **optimized algorithms** to minimize processing time and resource consumption. Then, we can use some AWS services to achieve this goal, like:
+  - Replicate content stored in Amazon S3 buckets across multiple AWS regions using **S3 Cross-Region** Replication
+  - We can implement **CDN** (Content Delivery Network) in project that consists in a distributed network of servers strategically positioned in multiple data centers across various geographical locations to deliver web content to users with high performance, low latency, and enhanced reliability. The AWS service that provide this, is **Amazon CloudFront**.
